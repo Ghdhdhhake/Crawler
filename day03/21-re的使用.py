@@ -27,9 +27,12 @@ print("___________findall()_____________")
 f1 = re.findall(r'y', str1)
 print(f1)
 print("___________test_____________")
-str2 = '<div class="info" id="info"><div><a herf="http://www.baidu.com">哔哩哔哩bilibili</a></div>'
+str2 = '<div><a herf="http://www.baidu.com">哔哩哔哩bilibili</a></div>'
 t1 = re.findall(r'[\u4e00-\u9fff]\w+', str2)
 t2 = re.findall(r'<a herf="http://www.baidu.com">(.+)</div>', str2)
 t3 = re.findall(r'<a herf="(.+)">', str2)
 print(t3)
-print("___________test_____________")
+print("___________sub()_____________")
+
+su1 = re.sub(r'<div>(.+)</div>', r'<span>\1</span>', str2)
+print(su1)
