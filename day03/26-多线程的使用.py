@@ -23,16 +23,17 @@ class CrawlInfo(Thread):
                 self.html_queue.put(response.text)
 #解析类
 class ParseInfo(Thread):
-    def __init__(self):
+    def __init__(self, html_queue):
         Thread.__init__(self)
         self.html_queue = html_queue
     def run(self):
         while self.html_queue.empty() == False:
             e = etree.HTML(self.html_queue.get())
             div_contents = e.xpath('//div[@class="list_content"]//div[1]')
-            for div in div_contents:
-                info = div.xpath('string(.)')
-                print(info)
+            with open("xiaohua.txt", 'a', encoding='utf-8') as f:
+                for div in div_contents:
+                    info = div.xpath('string(.)')
+                    f.write(info + '\n')
 
 
 
@@ -52,8 +53,21 @@ if __name__ == '__main__':
     for i in range(1, 4):
         new_url = base_url.format(i)
         url_queue.put(new_url)
-
+    crawl1_list = []
     #创建一个Crawl
     for i in range(0, 3):
         crawl1 = CrawlInfo(url_queue, html_queue)
+        crawl1_list.append(crawl1)
         crawl1.start()
+    parse_list = []
+    for i in range(0, 3):
+        parse = ParseInfo(html_queue)
+        parse_list.append(parse)
+        parse.start()
+    for parse in parse_list:
+        parse.join()
+    # for crawl1 in crawl1_list:
+    #     crawl1.join()
+    #
+    # parse = ParseInfo(html_queue)
+    # parse.start()
